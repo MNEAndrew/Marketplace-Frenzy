@@ -52,7 +52,7 @@ export function UpgradePanel({ coins, slots, selectedSlotId, onUpgrade }) {
         <button
           type="button"
           className={`btn-primary btn-block ${!canAfford ? 'btn-disabled' : ''}`}
-          disabled={!canAfford}
+          aria-disabled={!canAfford}
           onClick={() => onUpgrade(selectedSlotId)}
         >
           Upgrade for {formatCoins(cost)} coins

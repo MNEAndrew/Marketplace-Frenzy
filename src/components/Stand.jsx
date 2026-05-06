@@ -17,6 +17,7 @@ export function Stand({ standTypeId, level, side }) {
         '--stand-body': def.colors.body,
         '--stand-accent': def.colors.accent,
         '--stand-lift': `${awningLift}px`,
+        '--stand-delay': `${standTypeId.length * -0.37}s`,
       }}
     >
       {standArtSrc ? (
@@ -25,6 +26,7 @@ export function Stand({ standTypeId, level, side }) {
           alt=""
           className="stand__art"
           draggable="false"
+          decoding="async"
           loading="lazy"
         />
       ) : null}

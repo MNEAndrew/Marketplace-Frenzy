@@ -8,6 +8,8 @@ import { DecorationPanel } from './components/DecorationPanel.jsx';
 import { FloatingCoin } from './components/FloatingCoin.jsx';
 import { useGameState } from './hooks/useGameState.js';
 import { useCustomers } from './hooks/useCustomers.js';
+import { builtStandCount, STAND_TYPES, upgradeCostForStand } from './utils/gameData.js';
+import { formatCoins } from './utils/helpers.js';
 
 let popupSeq = 0;
 
@@ -18,6 +20,7 @@ export default function App() {
 
   const [tab, setTab] = useState('build');
   const [popups, setPopups] = useState([]);
+  const [notice, setNotice] = useState(null);
 
   const pushPopup = useCallback((payload) => {
     popupSeq += 1;
@@ -26,6 +29,14 @@ export default function App() {
     setTimeout(() => {
       setPopups((p) => p.filter((x) => x.id !== id));
     }, 900);
+  }, []);
+
+  const pushNotice = useCallback((message, tone = 'good') => {
+    const id = Date.now();
+    setNotice({ id, message, tone });
+    setTimeout(() => {
+      setNotice((current) => (current?.id === id ? null : current));
+    }, 1600);
   }, []);
 
   const onPurchase = useCallback(
@@ -43,9 +54,56 @@ export default function App() {
 
   const { customers } = useCustomers({ slots: state.slots, onPurchase });
 
-  const builtCount = useMemo(
-    () => Object.values(state.slots).filter((s) => s.built).length,
-    [state.slots]
+  const builtCount = useMemo(() => builtStandCount(state.slots), [state.slots]);
+
+  const handleBuild = useCallback(
+    (slotId, typeId) => {
+      const result = buildStand(slotId, typeId);
+      const def = STAND_TYPES[typeId];
+      if (result?.ok) {
+        pushNotice(`${def.name} opened`);
+        setTab('upgrade');
+        return;
+      }
+      if (result?.reason === 'coins') {
+        pushNotice(`Need ${formatCoins(result.shortfall)} more coins`, 'warn');
+        return;
+      }
+      if (result?.reason === 'locked') {
+        pushNotice('Build nearby stalls to open this pad', 'warn');
+        return;
+      }
+      pushNotice('Choose an empty pad first', 'warn');
+    },
+    [buildStand, pushNotice]
+  );
+
+  const handleUpgrade = useCallback(
+    (slotId) => {
+      const slot = state.slots[slotId];
+      if (!slot?.built) {
+        pushNotice('Select a built stall first', 'warn');
+        return;
+      }
+      const cost = upgradeCostForStand(slot.standType, slot.level);
+      if (state.coins < cost) {
+        pushNotice(`Need ${formatCoins(cost - state.coins)} more coins`, 'warn');
+        return;
+      }
+      if (upgradeStand(slotId)) pushNotice('Stall upgraded');
+    },
+    [pushNotice, state.coins, state.slots, upgradeStand]
+  );
+
+  const handleDecorate = useCallback(
+    (decorationId, cost) => {
+      if (state.coins < cost) {
+        pushNotice(`Need ${formatCoins(cost - state.coins)} more coins`, 'warn');
+        return;
+      }
+      if (buyDecoration(decorationId, cost)) pushNotice('Decoration placed');
+    },
+    [buyDecoration, pushNotice, state.coins]
   );
 
   return (
@@ -58,6 +116,7 @@ export default function App() {
           decorations={state.decorations}
           customers={customers}
           selectedSlotId={state.selectedSlotId}
+          builtCount={builtCount}
           onSelectSlot={selectSlot}
         />
 
@@ -69,12 +128,17 @@ export default function App() {
       </main>
 
       <section className="panel-section">
+        {notice && (
+          <div className={`notice notice--${notice.tone}`} role="status" aria-live="polite">
+            {notice.message}
+          </div>
+        )}
         {tab === 'build' && (
           <BuildPanel
             coins={state.coins}
             slots={state.slots}
             selectedSlotId={state.selectedSlotId}
-            onBuild={(slotId, typeId) => buildStand(slotId, typeId)}
+            onBuild={handleBuild}
           />
         )}
         {tab === 'upgrade' && (
@@ -82,11 +146,11 @@ export default function App() {
             coins={state.coins}
             slots={state.slots}
             selectedSlotId={state.selectedSlotId}
-            onUpgrade={(slotId) => upgradeStand(slotId)}
+            onUpgrade={handleUpgrade}
           />
         )}
         {tab === 'decorate' && (
-          <DecorationPanel coins={state.coins} decorations={state.decorations} onBuy={buyDecoration} />
+          <DecorationPanel coins={state.coins} decorations={state.decorations} onBuy={handleDecorate} />
         )}
       </section>
 

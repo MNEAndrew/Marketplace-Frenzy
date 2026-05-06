@@ -14,9 +14,9 @@ export const STAND_TYPES = {
     id: 'fruit',
     name: 'Fruit Stand',
     emoji: '🍊',
-    buildCost: 28,
-    baseIncome: 4,
-    baseUpgradeCost: 12,
+    buildCost: 24,
+    baseIncome: 5,
+    baseUpgradeCost: 10,
     description: 'Fresh picks every morning.',
     colors: { awning: '#e8a87c', body: '#fff5eb', accent: '#c9764e' },
   },
@@ -24,9 +24,9 @@ export const STAND_TYPES = {
     id: 'flower',
     name: 'Flower Stand',
     emoji: '🌸',
-    buildCost: 55,
-    baseIncome: 7,
-    baseUpgradeCost: 18,
+    buildCost: 44,
+    baseIncome: 8,
+    baseUpgradeCost: 16,
     description: 'Petals, pollen, and perfume.',
     colors: { awning: '#f4b8d5', body: '#fff8fb', accent: '#d4729c' },
   },
@@ -34,9 +34,9 @@ export const STAND_TYPES = {
     id: 'tea',
     name: 'Tea Stall',
     emoji: '🍵',
-    buildCost: 110,
-    baseIncome: 11,
-    baseUpgradeCost: 26,
+    buildCost: 92,
+    baseIncome: 12,
+    baseUpgradeCost: 24,
     description: 'Steam, spice, and calm.',
     colors: { awning: '#a8d4c8', body: '#f2faf7', accent: '#5a9b87' },
   },
@@ -44,7 +44,7 @@ export const STAND_TYPES = {
     id: 'bakery',
     name: 'Bakery',
     emoji: '🥐',
-    buildCost: 185,
+    buildCost: 168,
     baseIncome: 14,
     baseUpgradeCost: 32,
     description: 'Butter layers and warm ovens.',
@@ -54,7 +54,7 @@ export const STAND_TYPES = {
     id: 'boba',
     name: 'Boba Booth',
     emoji: '🧋',
-    buildCost: 320,
+    buildCost: 295,
     baseIncome: 18,
     baseUpgradeCost: 40,
     description: 'Chewy pearls, silky tea.',
@@ -64,7 +64,7 @@ export const STAND_TYPES = {
     id: 'book',
     name: 'Book Nook',
     emoji: '📚',
-    buildCost: 480,
+    buildCost: 430,
     baseIncome: 22,
     baseUpgradeCost: 48,
     description: 'Stories between covers.',
@@ -74,16 +74,16 @@ export const STAND_TYPES = {
 
 /** Vertical position along alley (0 = top entrance, 100 = bottom). Side placement. */
 export const ALLEY_SLOTS = [
-  { id: 'a1', side: 'left', rowPct: 11 },
-  { id: 'a2', side: 'right', rowPct: 18 },
-  { id: 'a3', side: 'left', rowPct: 28 },
-  { id: 'a4', side: 'right', rowPct: 36 },
-  { id: 'a5', side: 'left', rowPct: 46 },
-  { id: 'a6', side: 'right', rowPct: 54 },
-  { id: 'a7', side: 'left', rowPct: 64 },
-  { id: 'a8', side: 'right', rowPct: 72 },
-  { id: 'a9', side: 'left', rowPct: 82 },
-  { id: 'a10', side: 'right', rowPct: 90 },
+  { id: 'a1', side: 'left', rowPct: 11, unlockAtBuilt: 1 },
+  { id: 'a2', side: 'right', rowPct: 18, unlockAtBuilt: 0 },
+  { id: 'a3', side: 'left', rowPct: 28, unlockAtBuilt: 2 },
+  { id: 'a4', side: 'right', rowPct: 36, unlockAtBuilt: 3 },
+  { id: 'a5', side: 'left', rowPct: 46, unlockAtBuilt: 4 },
+  { id: 'a6', side: 'right', rowPct: 54, unlockAtBuilt: 5 },
+  { id: 'a7', side: 'left', rowPct: 64, unlockAtBuilt: 6 },
+  { id: 'a8', side: 'right', rowPct: 72, unlockAtBuilt: 7 },
+  { id: 'a9', side: 'left', rowPct: 82, unlockAtBuilt: 8 },
+  { id: 'a10', side: 'right', rowPct: 90, unlockAtBuilt: 9 },
 ];
 
 /** Slot id -> initial stand on first load only (see saveSystem merge). */
@@ -91,6 +91,15 @@ export const INITIAL_BUILT_SLOT = 'a2';
 
 /** Ordered list of stand ids available in Build panel */
 export const BUILD_MENU_ORDER = ['fruit', 'flower', 'tea', 'bakery', 'boba', 'book'];
+
+export function builtStandCount(slots) {
+  return Object.values(slots || {}).filter((s) => s?.built).length;
+}
+
+export function isSlotUnlocked(slotDef, slots) {
+  if (!slotDef) return false;
+  return builtStandCount(slots) >= (slotDef.unlockAtBuilt ?? 0);
+}
 
 export function incomeForStand(standTypeId, level) {
   const def = STAND_TYPES[standTypeId];

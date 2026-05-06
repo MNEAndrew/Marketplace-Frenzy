@@ -1,9 +1,16 @@
-import { ALLEY_SLOTS } from '../utils/gameData.js';
+import { ALLEY_SLOTS, isSlotUnlocked } from '../utils/gameData.js';
 import alleywayImage from '../assets/environment/alleyway-1.png';
 import { StandSlot } from './StandSlot.jsx';
 import { Customer } from './Customer.jsx';
 
-export function AlleyView({ slots, decorations, customers, selectedSlotId, onSelectSlot }) {
+export function AlleyView({
+  slots,
+  decorations,
+  customers,
+  selectedSlotId,
+  builtCount,
+  onSelectSlot,
+}) {
   return (
     <div className="alley-scroll">
       <div className="alley-frame">
@@ -18,6 +25,7 @@ export function AlleyView({ slots, decorations, customers, selectedSlotId, onSel
             <FacadeWindows decorations={decorations} side="left" />
           </div>
           <div className="alley-path">
+            <div className="alley-path__glow" />
             <div className="alley-path__stones" />
             <div className="alley-path__centerline" />
             {decorations.lights && <div className="alley-path__lights" aria-hidden="true" />}
@@ -35,6 +43,8 @@ export function AlleyView({ slots, decorations, customers, selectedSlotId, onSel
                 key={slot.id}
                 slotDef={slot}
                 slotState={slots[slot.id]}
+                locked={!isSlotUnlocked(slot, slots)}
+                builtCount={builtCount}
                 selected={selectedSlotId === slot.id}
                 onSelect={() => onSelectSlot(slot.id)}
               />

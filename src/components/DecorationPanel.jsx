@@ -21,7 +21,8 @@ export function DecorationPanel({ coins, decorations, onBuy }) {
                 className={`decor-row ${owned ? 'decor-row--owned' : ''} ${
                   !owned && !affordable ? 'decor-row--disabled' : ''
                 }`}
-                disabled={owned || !affordable}
+                disabled={owned}
+                aria-disabled={!owned && !affordable}
                 onClick={() => !owned && onBuy(d.id, d.cost)}
               >
                 <span className="decor-row__emoji" aria-hidden="true">

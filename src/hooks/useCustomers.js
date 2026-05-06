@@ -12,6 +12,8 @@ const BUBBLES = [
   'New chapter!',
 ];
 
+const VIP_BUBBLES = ['Market tour!', 'Treat myself!', 'Best lane!', 'Extra, please!'];
+
 let customerSeq = 0;
 
 function nextId() {
@@ -43,8 +45,10 @@ export function useCustomers({ slots, onPurchase }) {
         visited: {},
         bubble: null,
         hue: (Math.random() * 360) | 0,
-        isVip: Math.random() < 0.06,
-        speed: 4.5 + Math.random() * 3,
+        mood: Math.random() < 0.5 ? 'smile' : Math.random() < 0.75 ? 'star' : 'cap',
+        sway: Math.random() * 1.8,
+        isVip: Math.random() < 0.09,
+        speed: 3.6 + Math.random() * 4.4,
       },
     ]);
   }, []);
@@ -53,8 +57,8 @@ export function useCustomers({ slots, onPurchase }) {
     const interval = setInterval(() => {
       const built = Object.entries(slotsRef.current).filter(([, v]) => v.built);
       if (built.length === 0) return;
-      if (Math.random() < 0.42) spawnCustomer();
-    }, 1400);
+      if (Math.random() < 0.52) spawnCustomer();
+    }, 1150);
     return () => clearInterval(interval);
   }, [spawnCustomer]);
 
@@ -93,7 +97,7 @@ export function useCustomers({ slots, onPurchase }) {
               const row = slotDef.rowPct;
               if (newY >= row - 0.8 && updated.yPct < row + 0.5) {
                 if (Math.random() < 0.62) {
-                  const bonus = updated.isVip ? 1.35 : 1;
+                  const bonus = updated.isVip ? 1.65 : 1;
                   const amount = Math.round(
                     incomeForStand(slotState.standType, slotState.level) * bonus
                   );
@@ -111,7 +115,9 @@ export function useCustomers({ slots, onPurchase }) {
                     phase: 'buy',
                     buyUntil: now + 650 + Math.random() * 400,
                     visited: { ...updated.visited, [slotDef.id]: true },
-                    bubble: BUBBLES[(Math.random() * BUBBLES.length) | 0],
+                    bubble: updated.isVip
+                      ? VIP_BUBBLES[(Math.random() * VIP_BUBBLES.length) | 0]
+                      : BUBBLES[(Math.random() * BUBBLES.length) | 0],
                   };
                   stopped = true;
                   break;

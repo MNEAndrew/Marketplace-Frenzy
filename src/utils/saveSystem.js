@@ -13,7 +13,7 @@ const defaultDecorations = () => ({
 export function createInitialState() {
   return {
     version: 1,
-    coins: 42,
+    coins: 58,
     lifetimeEarned: 0,
     slots: {
       [INITIAL_BUILT_SLOT]: { built: true, standType: 'fruit', level: 1 },

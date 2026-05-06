@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { STAND_TYPES, upgradeCostForStand } from '../utils/gameData.js';
+import { ALLEY_SLOTS, STAND_TYPES, isSlotUnlocked, upgradeCostForStand } from '../utils/gameData.js';
 import { loadGameState, saveGameState } from '../utils/saveSystem.js';
 import { triggerHaptic } from '../utils/haptics.js';
 
@@ -32,12 +32,26 @@ export function useGameState() {
 
   const buildStand = useCallback((slotId, standTypeId) => {
     const def = STAND_TYPES[standTypeId];
-    if (!def) return false;
+    if (!def) return { ok: false, reason: 'unknown' };
     let success = false;
+    let failure = 'unknown';
+    let shortfall = 0;
     setState((s) => {
       const slot = s.slots[slotId];
-      if (slot?.built) return s;
-      if (s.coins < def.buildCost) return s;
+      const slotDef = ALLEY_SLOTS.find((item) => item.id === slotId);
+      if (!slotDef || !isSlotUnlocked(slotDef, s.slots)) {
+        failure = 'locked';
+        return s;
+      }
+      if (slot?.built) {
+        failure = 'built';
+        return s;
+      }
+      if (s.coins < def.buildCost) {
+        failure = 'coins';
+        shortfall = def.buildCost - s.coins;
+        return s;
+      }
       success = true;
       return {
         ...s,
@@ -49,7 +63,13 @@ export function useGameState() {
       };
     });
     if (success) triggerHaptic('success');
-    return success;
+    if (!success) triggerHaptic('light');
+    return {
+      ok: success,
+      reason: success ? 'built' : failure,
+      cost: def.buildCost,
+      shortfall,
+    };
   }, []);
 
   const upgradeStand = useCallback((slotId) => {
@@ -70,6 +90,7 @@ export function useGameState() {
       };
     });
     if (success) triggerHaptic('medium');
+    if (!success) triggerHaptic('light');
     return success;
   }, []);
 
