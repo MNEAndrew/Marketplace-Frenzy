@@ -22,8 +22,10 @@ Output is in `dist/`.
 
 ## Deploy on Vercel
 
-1. Push this folder to a Git repository.
-2. In [Vercel](https://vercel.com), **Import** the repo.
+**Repository:** [github.com/MNEAndrew/Marketplace-Frenzy](https://github.com/MNEAndrew/Marketplace-Frenzy)
+
+1. The app code is in the GitHub repo above.
+2. In [Vercel](https://vercel.com), **Import** `MNEAndrew/Marketplace-Frenzy` from GitHub.
 3. Framework preset: **Vite** (or “Other” with **Build Command** `npm run build` and **Output Directory** `dist`).
 4. Deploy. No extra config is required for this single-page app.
 
