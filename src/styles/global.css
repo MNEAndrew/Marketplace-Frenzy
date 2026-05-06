@@ -166,7 +166,7 @@ body {
     0 2px 0 rgba(255, 255, 255, 0.7);
   overflow: hidden;
   display: grid;
-  grid-template-columns: 1fr 38% 1fr;
+  grid-template-columns: 38% 24% 38%;
 }
 
 .alley-art-layer {
@@ -392,25 +392,26 @@ body {
   background: transparent;
   padding: 0;
   cursor: pointer;
-  width: 46%;
-  max-width: 168px;
+  width: 35%;
+  max-width: 158px;
   z-index: 3;
 }
 
 .stand-slot--left {
-  left: 2%;
+  left: 3%;
   text-align: left;
 }
 
 .stand-slot--right {
-  right: 2%;
+  right: 3%;
   text-align: right;
 }
 
 .stand-slot__pad {
   width: 100%;
-  aspect-ratio: 1 / 1;
-  max-height: 112px;
+  aspect-ratio: 1.35 / 1;
+  min-height: 86px;
+  max-height: 118px;
   border-radius: 18px;
   border: 3px dashed var(--slot-dot);
   background:
@@ -482,7 +483,7 @@ body {
   position: relative;
   display: inline-block;
   width: 100%;
-  max-width: 150px;
+  max-width: 154px;
   transition:
     transform 0.25s ease,
     filter 0.2s ease;
@@ -1062,7 +1063,7 @@ body {
   }
 
   .stand-slot {
-    width: 44%;
+    width: 36%;
   }
 
   .build-row__thumb {

@@ -76,14 +76,14 @@ export const STAND_TYPES = {
 export const ALLEY_SLOTS = [
   { id: 'a1', side: 'left', rowPct: 11, unlockAtBuilt: 1 },
   { id: 'a2', side: 'right', rowPct: 18, unlockAtBuilt: 0 },
-  { id: 'a3', side: 'left', rowPct: 28, unlockAtBuilt: 2 },
-  { id: 'a4', side: 'right', rowPct: 36, unlockAtBuilt: 3 },
-  { id: 'a5', side: 'left', rowPct: 46, unlockAtBuilt: 4 },
-  { id: 'a6', side: 'right', rowPct: 54, unlockAtBuilt: 5 },
-  { id: 'a7', side: 'left', rowPct: 64, unlockAtBuilt: 6 },
+  { id: 'a3', side: 'left', rowPct: 29, unlockAtBuilt: 2 },
+  { id: 'a4', side: 'right', rowPct: 39, unlockAtBuilt: 3 },
+  { id: 'a5', side: 'left', rowPct: 51, unlockAtBuilt: 4 },
+  { id: 'a6', side: 'right', rowPct: 57, unlockAtBuilt: 5 },
+  { id: 'a7', side: 'left', rowPct: 66, unlockAtBuilt: 6 },
   { id: 'a8', side: 'right', rowPct: 72, unlockAtBuilt: 7 },
-  { id: 'a9', side: 'left', rowPct: 82, unlockAtBuilt: 8 },
-  { id: 'a10', side: 'right', rowPct: 90, unlockAtBuilt: 9 },
+  { id: 'a9', side: 'left', rowPct: 84, unlockAtBuilt: 8 },
+  { id: 'a10', side: 'right', rowPct: 88, unlockAtBuilt: 9 },
 ];
 
 /** Slot id -> initial stand on first load only (see saveSystem merge). */
