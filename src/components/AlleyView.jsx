@@ -1,4 +1,5 @@
 import { ALLEY_SLOTS } from '../utils/gameData.js';
+import alleywayImage from '../assets/environment/alleyway-1.png';
 import { StandSlot } from './StandSlot.jsx';
 import { Customer } from './Customer.jsx';
 
@@ -8,6 +9,11 @@ export function AlleyView({ slots, decorations, customers, selectedSlotId, onSel
       <div className="alley-frame">
         <div className="alley-sky" aria-hidden="true" />
         <div className="alley-root">
+          <div
+            className="alley-art-layer"
+            aria-hidden="true"
+            style={{ backgroundImage: `url(${alleywayImage})` }}
+          />
           <div className="alley-buildings alley-buildings--left">
             <FacadeWindows decorations={decorations} side="left" />
           </div>

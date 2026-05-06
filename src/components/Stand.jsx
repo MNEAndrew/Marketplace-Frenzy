@@ -1,14 +1,16 @@
 import { STAND_TYPES } from '../utils/gameData.js';
+import { STAND_ART } from '../assets/standArt.js';
 
 export function Stand({ standTypeId, level, side }) {
   const def = STAND_TYPES[standTypeId];
   if (!def) return null;
+  const standArtSrc = STAND_ART[standTypeId];
   const scale = 1 + Math.min(6, level - 1) * 0.04;
   const awningLift = Math.min(8, (level - 1) * 1.5);
 
   return (
     <div
-      className={`stand stand--${side}`}
+      className={`stand stand--${side} ${standArtSrc ? 'stand--with-art' : ''}`}
       style={{
         transform: `scale(${scale})`,
         '--stand-awning': def.colors.awning,
@@ -17,6 +19,15 @@ export function Stand({ standTypeId, level, side }) {
         '--stand-lift': `${awningLift}px`,
       }}
     >
+      {standArtSrc ? (
+        <img
+          src={standArtSrc}
+          alt=""
+          className="stand__art"
+          draggable="false"
+          loading="lazy"
+        />
+      ) : null}
       <div className="stand__awning">
         <span className="stand__emoji" aria-hidden="true">
           {def.emoji}
